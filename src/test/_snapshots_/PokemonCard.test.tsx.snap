@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SnapShot Text wartortle correctly 1`] = `
+<Text>
+  wartortle
+</Text>
+`;

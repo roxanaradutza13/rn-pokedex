@@ -1,73 +1,228 @@
+import { useRoute } from "@react-navigation/native";
 import React from "react";
-import { View, Text, TextInput, StyleSheet, SafeAreaView } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  StyleSheet,
+} from "react-native";
+import useFetch from "../hooks/useFetch";
+import { Pokemon } from "../interfaces/Pokemon.interface";
 
-export default function SearchScreen() {
-  return (
-    <SafeAreaView style={styles.flexContainer}>
-      <LinearGradient
-        colors={[
-          "rgb(254, 240, 138)",
-          "rgb(187, 247, 208)",
-          "rgb(134, 239, 172)",
-        ]}
-        style={styles.gradientBackground}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      >
-        <View style={styles.container}>
-          <Text style={styles.title}>What Pokemon are you looking for?</Text>
-          <View style={styles.searchContainer}>
-            <View style={styles.searchIcon}>
-              <Text>🔍</Text>
+const PokemonDetailScreen = () => {
+  const route = useRoute();
+  const { url } = route.params;
+
+  const { data, loading, error } = useFetch<Pokemon>(url);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (data) {
+    const { name, id, sprites, types, abilities, weight } = data;
+
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          {/*INFO ON THE TOP */}
+          <View style={styles.topView}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{
+                  uri: sprites.other["official-artwork"].front_default,
+                }}
+                style={styles.image}
+              />
+              <Image
+                source={require("../../assets/pokemonBall.png")}
+                style={styles.pokeBall}
+              />
             </View>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search Pokemon, ability, move..."
-            />
+
+            <View style={styles.nameId}>
+              <Text style={styles.id}>#{id}</Text>
+              <Text style={styles.name}>{name}</Text>
+            </View>
+            <View style={styles.typeContainer}>
+              {types.map((type: { type: { name: string } }, index: number) => (
+                <Text key={index} style={styles.typeText}>
+                  {type.type.name.toUpperCase()}
+                </Text>
+              ))}
+            </View>
           </View>
-        </View>
-      </LinearGradient>
-    </SafeAreaView>
-  );
-}
+
+          {/*INFO ON THE BOTTOM */}
+          <View style={styles.bottomView}>
+            <Text style={styles.info}>Info</Text>
+            <Text style={styles.weight}>Weight: {weight} kg</Text>
+            <Text style={styles.sprites}>Sprites:</Text>
+            <View style={styles.spritesContainer}>
+              <Image
+                source={{ uri: sprites.back_default }}
+                style={styles.spriteImage}
+              />
+              <Image
+                source={{ uri: sprites.back_shiny }}
+                style={styles.spriteImage}
+              />
+              <Image
+                source={{ uri: sprites.front_default }}
+                style={styles.spriteImage}
+              />
+              <Image
+                source={{ uri: sprites.front_shiny }}
+                style={styles.spriteImage}
+              />
+            </View>
+            <Text style={styles.abilities}>Abilities:</Text>
+            <View style={styles.abilitiesContainer}>
+              {abilities.map((ability, index) => (
+                <Text key={index} style={styles.abilityText}>
+                  {ability.ability.name}
+                </Text>
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+};
 
 const styles = StyleSheet.create({
-  flexContainer: {
-    flex: 1, // Para que el contenedor ocupe toda la pantalla
-  },
-  gradientBackground: {
-    flex: 1,
-  },
-  container: {
+  topView: {
+    marginTop: 60,
     flex: 1,
     padding: 16,
   },
-  title: {
-    fontSize: 34,
+  loadingText: {
+    fontSize: 18,
+    textAlign: "center",
+  },
+  imageContainer: {
+    marginBottom: 16,
+    position: "relative", // Añade posición relativa al contenedor
+    alignItems: "center",
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: "cover",
+    zIndex: 1000,
+  },
+  pokeBall: {
+    position: "absolute",
+    opacity: 0.1,
+    width: 200,
+    height: 200,
+    transform: [{ rotate: "-20deg" }],
+  },
+  nameId: {
+    alignItems: "center",
+  },
+  name: {
+    fontSize: 55,
     fontWeight: "bold",
-    paddingHorizontal: 16,
-    color: "white",
-    marginBottom: 25,
-    marginTop: 50,
+    marginBottom: 18,
+    textAlign: "left",
+    color: "grey",
     textShadowColor: "rgba(0, 0, 0, 0.4)", // Color de la sombra
     textShadowOffset: { width: 1, height: 1 }, // Desplazamiento de la sombra
     textShadowRadius: 7, // Radio de la sombra
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    margin: 10,
-  },
-  searchInput: {
-    flex: 1,
-    paddingVertical: 10,
+  id: {
+    fontSize: 25,
+    fontWeight: "bold",
+    textAlign: "left",
     color: "grey",
   },
-  searchIcon: {
+  typeContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 6,
+  },
+  typeText: {
+    fontSize: 18,
+    backgroundColor: "#48F10E",
+    color: "white",
     padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    marginRight: 10,
+  },
+  bottomView: {
+    backgroundColor: "white",
+    padding: 26,
+    paddingHorizontal: 40,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+  },
+  info: {
+    fontSize: 25,
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+    marginBottom: 15,
+  },
+  weight: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 16,
+    color: "grey"
+  },
+  sprites: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "grey"
+  },
+  spritesContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    marginBottom: 10,
+  },
+  spriteImage: {
+    width: 70,
+    height: 70,
+  },
+abilitiesContainer: {
+    marginBottom: 16,
+    flexDirection: "row", 
+    flexWrap: "wrap", 
+    alignItems: "center", 
+  },
+  abilities: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "grey"
+  },
+  abilityText: {
+    fontSize: 18,
+    marginBottom: 10,
+    backgroundColor: "#078716",
+    color: "white",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    textAlign: "center",
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    marginRight: 10, 
+    marginTop: 10, 
   },
 });
+
+export default PokemonDetailScreen;
