@@ -1,0 +1,77 @@
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.frame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.lead {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+
+input {
+
+    line-height: 30px;
+    border-radius: 5px;
+}
+
+button {
+    line-height: 30px;
+    border-radius: 5px;
+    background-color: rgb(62, 131, 156);
+    color: rgb(194, 144, 144);
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(65, 98, 130);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    max-width: 100%;
+}
+
+
+.container-form {
+    width: 100%;
+}
+
+
+
+.title-table {
+    margin-top: 20px;
+    max-width: 100%;
+    background-color: rgb(146, 98, 152);
+    color: white;
+}
+
+.title-table th {
+    padding: 8px;
+    width: 100%;
+
+}
+
+
+

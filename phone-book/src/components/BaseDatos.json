@@ -1,0 +1,34 @@
+[
+    {
+        "id":1,
+     "name": "Maria",
+     "phone": "123-456-789",
+     "tech":[
+        {
+          "name": "Maria"
+        }
+    ]
+    },
+
+    {
+        "id":2,
+        "name": "Alexandra",
+        "phone": "456-789-123",
+        "tech":[
+           {
+             "name": "Alexandra"
+           }
+       ]
+    },
+
+    {
+        "id":3,
+        "name": "Ricardo",
+        "phone": "789123-456",
+        "tech":[
+           {
+             "name": "Ricardo"
+           }
+       ]
+    }
+]
